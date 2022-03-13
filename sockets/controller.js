@@ -4,12 +4,14 @@ const ticketControl = new TicketControl();
 
 const socketController = (socket) => {
 
-    socket.on('send-message', ( payload, callback ) => {
+    socket.emit( 'last-ticket', ticketControl.last );
 
-        const id = 123456789;
-        callback( id );
-        
-        socket.broadcast.emit('send-message', payload );
+    socket.on('next-ticket', ( payload, callback ) => {
+
+        const next = ticketControl.nextTicket();
+        callback( next );
+
+        // Pending: notify that is a new ticket pending to assign
 
     });
 
