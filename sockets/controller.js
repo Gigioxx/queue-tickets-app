@@ -5,6 +5,7 @@ const ticketControl = new TicketControl();
 const socketController = (socket) => {
 
     socket.emit( 'last-ticket', ticketControl.last );
+    socket.emit( 'actual-state', ticketControl.last4 );
 
     socket.on('next-ticket', ( payload, callback ) => {
 
@@ -26,6 +27,7 @@ const socketController = (socket) => {
         const ticket = ticketControl.attendTicket( desk );
 
         // Pending: Notify change in last 4 tickets
+        socket.broadcast.emit( 'actual-state', ticketControl.last4 );
 
         if ( !ticket ) {
             callback({
