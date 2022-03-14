@@ -15,6 +15,32 @@ const socketController = (socket) => {
 
     });
 
+    socket.on('attend-ticket', ( { desk }, callback ) => {
+        if ( !desk ) {
+            return callback({
+                ok: false,
+                msg: 'Desk is required'
+            });
+        }
+
+        const ticket = ticketControl.attendTicket( desk );
+
+        // Pending: Notify change in last 4 tickets
+
+        if ( !ticket ) {
+            callback({
+                ok: false,
+                msg: 'No pending tickets'
+            });
+        } else {
+            callback({
+                ok: true,
+                ticket
+            });
+        }
+
+    });
+
 }
 
 module.exports = {
