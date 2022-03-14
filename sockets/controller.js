@@ -6,13 +6,13 @@ const socketController = (socket) => {
 
     socket.emit( 'last-ticket', ticketControl.last );
     socket.emit( 'actual-state', ticketControl.last4 );
+    socket.emit( 'pending-tickets', ticketControl.tickets.length );
 
     socket.on('next-ticket', ( payload, callback ) => {
 
         const next = ticketControl.nextTicket();
         callback( next );
-
-        // Pending: notify that is a new ticket pending to assign
+        socket.broadcast.emit( 'pending-tickets', ticketControl.tickets.length );
 
     });
 
@@ -26,8 +26,9 @@ const socketController = (socket) => {
 
         const ticket = ticketControl.attendTicket( desk );
 
-        // Pending: Notify change in last 4 tickets
         socket.broadcast.emit( 'actual-state', ticketControl.last4 );
+        socket.emit( 'pending-tickets', ticketControl.tickets.length );
+        socket.broadcast.emit( 'pending-tickets', ticketControl.tickets.length );
 
         if ( !ticket ) {
             callback({

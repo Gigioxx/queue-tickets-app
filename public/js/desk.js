@@ -3,6 +3,7 @@ const lblDesk = document.querySelector('h1');
 const btnAttend = document.querySelector('button');
 const lblTicket = document.querySelector('small');
 const divAlert = document.querySelector('.alert');
+const lblPending = document.querySelector('#lblPending');
 
 const searchParams = new URLSearchParams( window.location.search );
 
@@ -26,9 +27,15 @@ socket.on('disconnect', () => {
     btnAttend.disabled = true;
 });
 
-socket.on('last-ticket', ( last ) => {
-    // lblNewTicket.innerText = 'Ticket ' + last;
-})
+socket.on('pending-tickets', ( pending ) => {
+    if ( pending === 0 ) {
+        lblPending.style.display = 'none';
+    } else {
+        lblPending.style.display = '';
+        lblPending.innerText = pending;
+    }
+    
+});
 
 btnAttend.addEventListener( 'click', () => {
     
